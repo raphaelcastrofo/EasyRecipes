@@ -21,7 +21,7 @@ object RetrofitClient {
                 val originalHttpUrl = chain.request().url
                 val newUrl = originalHttpUrl.newBuilder()
                     .addQueryParameter("apiKey", token).build()
-                chain.proceed( request.url(newUrl).build())
+                chain.proceed(request.url(newUrl).build())
             }
 
             return clientBuilder.build()
