@@ -6,5 +6,5 @@ import retrofit2.http.GET
 interface ApiService {
 
     @GET("random?number=20")
-    fun getRecipes() : Call<List<>>
+    fun getRecipes() : Call<RecipesResponse>
 }
