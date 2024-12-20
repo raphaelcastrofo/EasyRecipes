@@ -2,18 +2,15 @@ package com.devspace.myapplication
 
 import android.util.Log
 import com.devspace.myapplication.ui.theme.EasyRecipesTheme
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Card
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -21,8 +18,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -63,8 +58,8 @@ fun MainScreen(navController: NavHostController) {
 
     })
 
-    RecipeContent(
-        radomRecipes = randomRecipes,
+    RecipeSession(
+        recipes = randomRecipes,
     ) {
         itemClicked ->
         navController.navigate(route = "recipeDetail/${itemClicked.id}")
@@ -74,22 +69,8 @@ fun MainScreen(navController: NavHostController) {
 }
 
 @Composable
-
-private fun RecipeContent(
-    radomRecipes: List<RecipeDto>,
-    onClick: (RecipeDto) -> Unit
-) {
-
-    RecipeSession(
-        recipeList = radomRecipes,
-        onClick = onClick
-    )
-
-}
-
-@Composable
 private fun RecipeSession(
-    recipeList: List<RecipeDto>,
+    recipes: List<RecipeDto>,
     onClick: (RecipeDto)->Unit,
 ){
 
@@ -105,20 +86,28 @@ private fun RecipeSession(
         )
 
         Spacer(modifier = Modifier.size(8.dp))
+        RecipeList(recipes = recipes, onClick = onClick)
 
-        RecipeList(recipeList = recipeList, onClick = onClick)
     }
+
 }
+
+
 
 @Composable
 private fun RecipeList(
-    recipeList: List<RecipeDto>,
+    modifier: Modifier = Modifier,
+    recipes: List<RecipeDto>,
     onClick: (RecipeDto) -> Unit,
 ){
-    LazyColumn {
-        items(recipeList){
+
+    LazyColumn (
+        modifier = modifier.padding(16.dp)
+    ) {
+        items(recipes){
+
             RecipeCard(
-                recipeDto = it,
+                recipe = it,
                 onClick = onClick
             )
         }
@@ -126,36 +115,36 @@ private fun RecipeList(
 }
 
 @Composable
-
 private fun RecipeCard(
-    recipeDto: RecipeDto,
+    recipe: RecipeDto,
     onClick: (RecipeDto) -> Unit
 ){
-    Column(
+    Card(
         modifier = Modifier
-            .width(IntrinsicSize.Min)
-            .clickable {
-                onClick.invoke(recipeDto)
-            }
-    ){
+            .fillMaxWidth()
+            .padding(16.dp)
+    ) {
+        Text(text = "test")
+        Text(text = recipe.title, fontWeight = FontWeight.Bold)
+        Spacer(modifier = Modifier.height(8.dp))
+
+        Spacer(modifier = Modifier.height(8.dp))
         AsyncImage(
-            contentScale = ContentScale.Crop,
+            model = recipe.image,
+            contentDescription = "Recipe Image",
             modifier = Modifier
-                .clip(RoundedCornerShape(topEnd = 8.dp , topStart = 8.dp))
+                .height(150.dp)
                 .fillMaxWidth()
-                .height(150.dp),
-            model = recipeDto.image, contentDescription = "${recipeDto.title} Image"
         )
     }
-
 }
 
 @Preview(showBackground = true)
 @Composable
 fun MainPreview() {
     EasyRecipesTheme {
-        RecipeContent(
-            radomRecipes = emptyList(),
+        RecipeSession(
+            recipes = emptyList(),
             onClick = {
 
             }
