@@ -125,7 +125,7 @@ private fun RecipeCard(
             .padding(16.dp)
     ) {
         Text(text = "test")
-        Text(text = recipe.title, fontWeight = FontWeight.Bold)
+        Text(text = recipe.name, fontWeight = FontWeight.Bold)
 
         Spacer(modifier = Modifier.height(8.dp))
         AsyncImage(

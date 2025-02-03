@@ -11,7 +11,7 @@ data class RecipesResponse(
 
 data class RecipeDto (
     val id: Int,
-    val title: String,
+    val name: String,
     val image:String,
-    val summary: String,
+    val aisle: String,
 )
