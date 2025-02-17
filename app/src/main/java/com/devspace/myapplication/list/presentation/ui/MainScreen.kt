@@ -1,14 +1,12 @@
-package com.devspace.myapplication
+package com.devspace.myapplication.list.presentation.ui
 
 import android.util.Log
 import androidx.compose.foundation.clickable
 import com.devspace.myapplication.ui.theme.EasyRecipesTheme
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -16,6 +14,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -28,40 +27,22 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
+import com.devspace.myapplication.list.data.ListService
+import com.devspace.myapplication.common.model.RecipeDto
+import com.devspace.myapplication.common.model.RecipesResponse
+import com.devspace.myapplication.common.data.RetrofitClient
+import com.devspace.myapplication.list.presentation.RecipeListViewModel
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
 @Composable
-fun MainScreen(navController: NavHostController) {
+fun MainScreen(navController: NavHostController,viewModel: RecipeListViewModel) {
 
-    var randomRecipes by rememberSaveable() { mutableStateOf <List<RecipeDto>>(emptyList()) }
-    val retrofit = RetrofitClient.retrofitInstance.create(ApiService::class.java)
-
-    if (randomRecipes.isEmpty()){
-            retrofit.getRecipes().enqueue(object : Callback<RecipesResponse> {
-            override fun onResponse(
-                call: Call<RecipesResponse>,
-                response: Response<RecipesResponse>
-            ) {
-                if (response.isSuccessful) {
-                    randomRecipes = response.body()?.recipes ?: emptyList()
-                } else {
-                    Log.d("MainActivity", "Request Error :: ${response.errorBody()}")
-
-                }
-            }
-
-            override fun onFailure(
-                call: Call<RecipesResponse>,
-                t: Throwable) {
-                Log.d("MainActivity", "Network Error :: ${t.message}")
-            }
-
-        })
-    }
+val randomRecipes by viewModel.uiRecipes.collectAsState()
 
 
     RecipeSession(
@@ -156,15 +137,3 @@ fun RecipeCard(
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun MainPreview() {
-    EasyRecipesTheme {
-        RecipeSession(
-            recipes = emptyList(),
-            onClick = {
-
-            }
-        )
-    }
-}
