@@ -39,8 +39,6 @@ val randomRecipes by viewModel.uiRecipes.collectAsState()
         itemClicked ->
         navController.navigate(route = "recipeDetail/${itemClicked.id}")
     }
-
-
 }
 
 @Composable
@@ -48,7 +46,6 @@ fun RecipeSession(
     recipes: List<RecipeDto>,
     onClick: (RecipeDto)->Unit,
 ){
-
     Column (
         modifier = Modifier
             .fillMaxWidth()
@@ -58,15 +55,11 @@ fun RecipeSession(
             modifier = Modifier.padding(24.dp),
             fontSize = 32.sp,
             text = "Recipes",
-            fontWeight = FontWeight.SemiBold
+            fontWeight = FontWeight.Bold
         )
-
         RecipeList(recipes = recipes, onClick = onClick)
-
     }
-
 }
-
 
 @Composable
 private fun RecipeList(
@@ -121,7 +114,7 @@ fun RecipeCard(
             modifier = Modifier.padding(8.dp),
             text = recipe.summary,
             maxLines = 3,
-            fontWeight = FontWeight.Bold)
+            fontWeight = FontWeight.Light)
     }
 }
 
